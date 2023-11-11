@@ -30,3 +30,7 @@ class UserCreateUpdate(fastapi_users.schemas.BaseUserCreate):
     role_id: RoleEnum = Field(default=RoleEnum.EMPLOYEE)
     grade_id: uuid.UUID | None = Field(default=None)
     location_id: uuid.UUID | None = Field(default=None)
+
+
+class UserUpdate(UserCreateUpdate):
+    password: str | None = Field(default=None)

@@ -1,5 +1,5 @@
 from repositories.user import get_user_manager
-from schemas.user import UserRead, UserCreateUpdate, RoleEnum
+from schemas.user import UserRead, UserCreateUpdate, RoleEnum, UserUpdate
 from services.auth import fastapi_users, auth_backend, current_active_user
 
 from models.user import User
@@ -22,7 +22,7 @@ async def authenticated_route(user: User = Depends(current_active_user)):
     return {"user_id": user.id}
 
 
-@api_router.post("/api/register")
+@api_router.post("/api/register/")
 async def register(
     request: Request,
     user_create: UserCreateUpdate,
@@ -32,9 +32,27 @@ async def register(
         created_user = await user_manager.create(
             user_create, safe=(True if user_create.role_id == RoleEnum.EMPLOYEE else False), request=request
         )
+        return UserRead.from_orm(created_user)
+    except exceptions.UserAlreadyExists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    except exceptions.InvalidPasswordException as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+
+@api_router.patch("/auth/me")
+async def update_user(
+        request: Request,
+        user_update: UserUpdate | UserCreateUpdate,
+        user: models.UP = Depends(current_active_user),
+        user_manager: BaseUserManager[models.UP, models.ID] = Depends(get_user_manager),
+):
+    try:
+        user = await user_manager.update(
+            user_update, user, safe=(True if user_update.role_id == RoleEnum.EMPLOYEE else False), request=request
+        )
+        return UserRead.from_orm(user)
 
     except exceptions.UserAlreadyExists:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
     except exceptions.InvalidPasswordException as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-    return UserRead.from_orm(created_user)

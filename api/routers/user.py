@@ -15,7 +15,7 @@ api_router.include_router(
     prefix="/auth",
 )
 
-@api_router.get("/employees")
+@api_router.get("/employees/")
 async def get_employees(user: User = Depends(current_active_user),
                         session: AsyncSession = Depends(get_async_session)) -> list[UserRead]:
     if user.role_id != RoleEnum.MANAGER:

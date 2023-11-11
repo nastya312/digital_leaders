@@ -14,7 +14,7 @@ from services.point import PointService
 api_router = APIRouter(tags=["task"])
 
 
-@api_router.post("/task/point")
+@api_router.post("/task/point/")
 async def create_point(point: PointCreateUpdate, user: User = Depends(current_active_user),
                       session: AsyncSession = Depends(get_async_session)):
     service = PointService(session)
@@ -22,28 +22,28 @@ async def create_point(point: PointCreateUpdate, user: User = Depends(current_ac
     return result if result else {}
 
 
-@api_router.patch("/task/point")
+@api_router.patch("/task/point/")
 async def update_point(point: PointCreateUpdate, user: User = Depends(current_active_user),
                       session: AsyncSession = Depends(get_async_session)) -> PointRead:
     service = PointService(session)
     return await service.update(point)
 
 
-@api_router.get("/point/point/{point_id}")
+@api_router.get("/point/point/{point_id}/")
 async def get_point(point_id: uuid.UUID = Path(), user: User = Depends(current_active_user),
                    session: AsyncSession = Depends(get_async_session)) -> PointRead:
     service = PointService(session)
     return await service.get(point_id)
 
 
-@api_router.get("/task/points")
+@api_router.get("/task/points/")
 async def get_points(user: User = Depends(current_active_user),
                     session: AsyncSession = Depends(get_async_session)) -> list[PointRead]:
     service = PointService(session)
     return await service.get_all()
 
 
-@api_router.delete("/task/{point_id}")
+@api_router.delete("/task/{point_id}/")
 async def delete_point(point_id: uuid.UUID = Path(),
                       user: User = Depends(current_active_user),
                       session: AsyncSession = Depends(get_async_session)):

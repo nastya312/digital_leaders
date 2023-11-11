@@ -27,9 +27,8 @@ class GradeRepository(BaseRepository):
         return grade_id
 
     async def _update(self, grade_to_update: GradeCreateUpdate) -> Grade:
-        stmt = update(Grade).where(Grade.id == Grade.id)\
+        stmt = update(Grade).where(Grade.id == grade_to_update.id)\
             .values(**grade_to_update.dict(exclude_unset=True, exclude={'id'})).returning(Grade)
-
         grade = (await self.execute_and_commit(stmt)).scalars().first()
         return grade
 

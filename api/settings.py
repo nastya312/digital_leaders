@@ -24,7 +24,10 @@ class ApiSettings(BaseSettings):
     POOL: int = os.environ.get('POOL', 50)
     MAX_OVER: int = os.environ.get('MAX_OVER', 100)
 
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES:', 60*15))
+    CELERY_BROKER_URL: str = os.environ['CELERY_BROKER_URL']
+    CELERY_RESULT_BACKEND: str = os.environ['CELERY_RESULT_BACKEND']
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES:', 60*60*24*31))
     ALGORITHM: str = os.environ.get('ALGORITHM', '"HS256"')
     SECURITY_KEY: str = os.environ['SECURITY_KEY']
 

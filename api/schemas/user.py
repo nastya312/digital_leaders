@@ -14,7 +14,7 @@ class RoleEnum(Enum):
 class UserRead(fastapi_users.schemas.BaseUser[uuid.UUID]):
     first_name: str
     last_name: str
-    patronymic: str = Field(default=None)
+    patronymic: str | None = Field(default=None)
     created_at: datetime_dt.datetime
 
     role_id: RoleEnum = Field(default=RoleEnum.EMPLOYEE)
@@ -25,7 +25,7 @@ class UserRead(fastapi_users.schemas.BaseUser[uuid.UUID]):
 class UserCreateUpdate(fastapi_users.schemas.BaseUserCreate):
     first_name: str
     last_name: str
-    patronymic: str = Field(default=None)
+    patronymic: str | None = Field(default=None)
 
     role_id: RoleEnum = Field(default=RoleEnum.EMPLOYEE)
     grade_id: uuid.UUID | None = Field(default=None)
